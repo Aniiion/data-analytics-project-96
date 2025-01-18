@@ -57,11 +57,7 @@ canal as (
         utm_campaign,
         sum(daily_spent) as total_cost
     from vk_ads
-    group by
-        campaign_date,
-        utm_source,
-        utm_medium,
-        utm_campaign
+    group by campaign_date, utm_source, utm_medium, utm_campaign
     union
     select
         date(campaign_date) as campaign_date,
@@ -89,7 +85,8 @@ select
     lcl.purchases_count,
     lcl.revenue
 from last_paid_click as lcl
-left join canal as c
+left join
+    canal as c
     on
         lcl.utm_source = c.utm_source
         and lcl.utm_medium = c.utm_medium
