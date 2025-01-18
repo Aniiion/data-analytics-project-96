@@ -1,35 +1,24 @@
 -- Количество пользователей, заходивших на сайт:
-
-
 select 
 count(distinct visitor_id) as total_visitor,
 date(visit_date) as visit_day
 from sessions s 
 group by visit_day
 order by visit_day;
-
-
 --Каналы приводящие пользователей на сайт (по дням/неделям/месяца):
-
 select source,
 count(distinct visitor_id) as total_visitors,
 date(visit_date) as visit_day
 from sessions s 
 group by source, visit_day
 order by visit_day, source;
-
-
 --Количество лидов:
-
 select count(distinct lead_id) as total_leads,
 date(created_at) as lead_day
 from leads l 
 group by lead_day
 order by lead_day;
-
-
 --Расходы по разным каналам в динамике:
-
 select 
 utm_source,
 sum(daily_spent) as total_spent,
@@ -45,10 +34,7 @@ from ya_ads ya
 group by 
 utm_source, campaign_day
 order by campaign_day, utm_source;
-
-
 -- Окупаемость каналов:
-
 select 
     s.source,
     coalesce(sum(ya.daily_spent), 0) + coalesce(sum(vk.daily_spent), 0) as total_cost,
@@ -66,9 +52,7 @@ where
     s.source in ('yandex', 'vk', 'telegram', 'google', 'organic', 'admitad', 'bing.com')
 group by
     s.source;
-
 -- Конверсия из клика в лид:
-
 select 
     s.source,
     count(distinct s.visitor_id) as visitors_count,
@@ -80,17 +64,13 @@ left join
     leads l on s.visitor_id = l.visitor_id
 group by
     s.source;
-
 -- Из лида в оплату:
-
 select
 count(distinct lead_id) as leads_count,
 count(distinct CASE WHEN status_id = '142' THEN lead_id END) as paid_count,
 (count(distinct CASE WHEN status_id = '142' THEN lead_id END) * 100.0 / nullif(count(distinct lead_id), 0)) as conversion_rate
 from leads l;
-
 -- Основные метрики:
-
 with last_paid_click as (
     select
         l.visitor_id,
