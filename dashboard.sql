@@ -111,8 +111,8 @@ with last_paid_click as (
         s.source as utm_source,
         s.medium as utm_medium,
         s.campaign as utm_campaign,
-        s.lead_id,
-        s.created_at,
+        l.lead_id,
+        l.created_at,
         l.amount,
         l.closing_reason,
         l.status_id,
@@ -145,6 +145,22 @@ f_clicks as (
     where rn = 1
 ),
 
+ya_ads_summary as (
+    select
+        utm_source,
+        sum(daily_spent) as daily_spent
+    from ya_ads
+    group by utm_source
+),
+
+vk_ads_summary as (
+    select
+        utm_source,
+        sum(daily_spent) as daily_spent
+    from vk_ads
+    group by utm_source
+),
+
 metrics as (
     select
         f.utm_source,
@@ -153,31 +169,16 @@ metrics as (
             +
             coalesce(vk.daily_spent, 0)
         ) as total_cost,
-        count(distinct f.visitor_id) as
-        visitors_count,
+        count(distinct f.visitor_id) as visitors_count,
         count(distinct f.lead_id) as leads_count,
         count(distinct case
             when f.status_id = '142'
                 then f.lead_id
-    end) as purchases_count,
+        end) as purchases_count,
         sum(f.amount) as revenue
     from f_clicks as f
-    left join (
-        select
-            utm_source,
-            campaign_date,
-            sum(daily_spent) as daily_spent
-        from ya_ads
-        group by utm_source, campaign_date
-    ) as ya on f.utm_source = ya.utm_source
-    left join (
-        select
-            utm_source,
-            campaign_date,
-            sum(daily_spent) as daily_spent
-        from vk_ads
-        group by utm_source, campaign_date
-    ) as vk on f.utm_source = vk.utm_source
+    left join ya_ads_summary as ya on f.utm_source = ya.utm_source
+    left join vk_ads_summary as vk on f.utm_source = vk.utm_source
     group by f.utm_source
 )
 
