@@ -1,16 +1,16 @@
 "visit_date","utm_source","utm_medium","utm_campaign","visitors_count","total_cost","leads_count","purchases_count","revenue"
-2023-06-01 00:00:00.000,yandex,cpc,prof-frontend,1,1827336,1,1,237990
-2023-06-01 00:00:00.000,yandex,cpc,freemium,2,1003508,2,2,232766
-2023-06-01 00:00:00.000,yandex,cpc,base-frontend,1,191275,1,1,201150
-2023-06-01 00:00:00.000,vk,cpc,freemium-frontend,1,78763,1,1,189210
-2023-06-01 00:00:00.000,yandex,cpc,freemium,1,501754,1,1,188991
-2023-06-01 00:00:00.000,yandex,cpc,prof-frontend,1,1827336,1,1,180306
-2023-06-01 00:00:00.000,vk,cpc,prof-python,1,145348,1,1,178800
-2023-06-01 00:00:00.000,vk,cpc,prof-java,1,132757,1,1,178800
-2023-06-01 00:00:00.000,yandex,cpc,prof-frontend,1,1827336,1,1,167625
-2023-06-01 00:00:00.000,yandex,cpc,base-python,1,173465,1,1,160920
-2023-06-01 00:00:00.000,vk,cpc,prof-java,1,132757,1,1,151192
-2023-06-01 00:00:00.000,yandex,cpc,prof-python,2,2507216,2,1,151192
-2023-06-06 00:00:00.000,telegram,cpp,base-java,1,0,1,1,151192
-2023-06-07 00:00:00.000,telegram,cpp,base-java,1,0,1,1,151192
-2023-06-09 00:00:00.000,telegram,cpp,base-java,1,0,1,1,151192
+"2023-06-01",yandex,cpc,prof-frontend,1,1827336,1,1,237990
+"2023-06-01",yandex,cpc,freemium,2,1003508,2,2,232766
+"2023-06-01",yandex,cpc,base-frontend,1,191275,1,1,201150
+"2023-06-01",vk,cpc,freemium-frontend,1,78763,1,1,189210
+"2023-06-01",yandex,cpc,freemium,1,501754,1,1,188991
+"2023-06-01",yandex,cpc,prof-frontend,1,1827336,1,1,180306
+"2023-06-01",vk,cpc,prof-python,1,145348,1,1,178800
+"2023-06-01",vk,cpc,prof-java,1,132757,1,1,178800
+"2023-06-01",yandex,cpc,prof-frontend,1,1827336,1,1,167625
+"2023-06-01",yandex,cpc,base-python,1,173465,1,1,160920
+"2023-06-01",vk,cpc,prof-java,1,132757,1,1,151192
+"2023-06-01",yandex,cpc,prof-python,2,2507216,2,1,151192
+"2023-06-06",telegram,cpp,base-java,1,0,1,1,151192
+"2023-06-07",telegram,cpp,base-java,1,0,1,1,151192
+"2023-06-09",telegram,cpp,base-java,1,0,1,1,151192
