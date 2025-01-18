@@ -142,10 +142,13 @@ f_clicks as (
 metrics as (
     select
         f.utm_source,
-        sum(coalesce(ya.daily_spent, 0) + coalesce(vk.daily_spent, 0)) as total_cost,
-        count(distinct f.visitor_id) as visitors_count,
+        sum(coalesce(ya.daily_spent, 0) + 
+coalesce(vk.daily_spent, 0)) as total_cost,
+        count(distinct f.visitor_id) as 
+visitors_count,
         count(distinct f.lead_id) as leads_count,
-        count(distinct case when f.status_id = '142' then f.lead_id end) as purchases_count,
+        count(distinct case when f.status_id = '142'
+then f.lead_id end) as purchases_count,
         sum(f.amount) as revenue
     from f_clicks as f
     left join (
