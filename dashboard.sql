@@ -43,13 +43,13 @@ select
     coalesce(sum(l.amount), 0) as revenue,
     (coalesce(sum(l.amount), 0) - (coalesce(sum(ya.daily_spent), 0) + coalesce(sum(vk.daily_spent), 0))) / nullif((coalesce(sum(ya.daily_spent), 0) + coalesce(sum(vk.daily_spent), 0)), 0) * 100 as roi
 from
-    sessions
+    sessions s
 left join
-    leads on s.visitor_id = l.visitor_id
+    leads l on s.visitor_id = l.visitor_id
 left join
-    ya_ads on s.source = ya.utm_source and s.visit_date = ya.campaign_date
+    ya_ads ya on s.source = ya.utm_source and s.visit_date = ya.campaign_date
 left join
-    vk_ads on s.source = vk.utm_source and s.visit_date = vk.campaign_date
+    vk_ads vk on s.source = vk.utm_source and s.visit_date = vk.campaign_date
 where
     s.source in ('yandex', 'vk', 'telegram', 'google', 'organic', 'admitad', 'bing.com')
 group by
@@ -61,9 +61,9 @@ select
     count(distinct l.lead_id) as leads_count,
     (count(distinct l.lead_id) * 1.0 / nullif(count(distinct s.visitor_id), 0)) as conversion_click_to_lead
 from
-    sessions
+    sessions s
 left join
-    leads on s.visitor_id = l.visitor_id
+    leads l on s.visitor_id = l.visitor_id
 group by
     s.source;
 -- Из лида в оплату:
@@ -143,7 +143,7 @@ metrics as (
 )
 
 select
-utm_source,
+    utm_source,
     total_cost,
     visitors_count,
     leads_count,
