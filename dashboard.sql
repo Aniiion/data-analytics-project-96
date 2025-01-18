@@ -90,12 +90,17 @@ group by
 -- Из лида в оплату:
 select
     count(distinct lead_id) as leads_count,
-    count(distinct case when status_id = '142'
-            then
-                lead_id end) as paid_count,
-    (count(distinct case when status_id = '142' then
-        lead_id end) * 100.0 / nullif(count(distinct
-    lead_id), 0)) as conversion_rate
+    count(distinct case
+        when status_id = '142'
+            then lead_id
+    end) as paid_count,
+    (count(distinct case
+        when status_id = '142' then
+        lead_id
+    end) * 100.0 / nullif(count(
+        distinct
+        lead_id
+    ), 0)) as conversion_rate
 from leads;
 -- Основные метрики:
 with last_paid_click as (
