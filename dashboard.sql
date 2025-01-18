@@ -77,9 +77,9 @@ select
     s.source,
     count(distinct s.visitor_id) as visitors_count,
     count(distinct l.lead_id) as leads_count,
-        (
-        count(distinct l.lead_id) * 1.0 
-    / nullif(count(distinct s.visitor_id), 0)
+    (
+        count(distinct l.lead_id) * 1.0
+        / nullif(count(distinct s.visitor_id), 0)
     ) as conversion_click_to_lead
 from
     sessions as s
@@ -90,12 +90,12 @@ group by
 -- Из лида в оплату:
 select
     count(distinct lead_id) as leads_count,
-        count(distinct case when status_id = '142'
-then
-lead_id end) as paid_count,
-            (count(distinct case when status_id = '142' then
-lead_id end) * 100.0 / nullif(count(distinct
-lead_id), 0)) as conversion_rate
+    count(distinct case when status_id = '142'
+            then
+                lead_id end) as paid_count,
+    (count(distinct case when status_id = '142' then
+        lead_id end) * 100.0 / nullif(count(distinct
+    lead_id), 0)) as conversion_rate
 from leads;
 -- Основные метрики:
 with last_paid_click as (
