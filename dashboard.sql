@@ -38,23 +38,32 @@ group by
 order by campaign_day, utm_source;
 -- Окупаемость каналов:
 select
-    s.source, coalesce(sum(ya.daily_spent), 0) + 
-    coalesce(sum(vk.daily_spent), 0) as total_cost,
+    s.source, 
+    coalesce(sum(ya.daily_spent), 0)
+    + coalesce(sum(vk.daily_spent), 0) as total_cost,
     coalesce(sum(l.amount), 0) as revenue,
-    (coalesce(sum(l.amount), 0) - (coalesce(sum(ya.daily_spent), 0)
-    + coalesce(sum(vk.daily_spent), 0))) / 
-    nullif((coalesce(sum(ya.daily_spent), 0) + coalesce(sum(vk.daily_spent), 0)), 0) * 100 as roi
+    (coalesce(
+        sum(l.amount), 0) - (
+        coalesce(sum(ya.daily_spent), 0)
+        + coalesce(sum(vk.daily_spent), 0)
+    )) 
+    / nullif((coalesce(sum(ya.daily_spent), 0) +
+coalesce(sum(vk.daily_spent), 0)), 0) * 100 as roi
 from
     sessions as s
 left join
     leads as l on s.visitor_id = l.visitor_id
 left join
-    ya_ads as ya on s.source = ya.utm_source and s.visit_date = ya.campaign_date
+    ya_ads as ya on s.source = ya.utm_source and 
+s.visit_date = ya.campaign_date
 left join
     vk_ads as vk
-    on s.source = vk.utm_source and s.visit_date = vk.campaign_date
+    on s.source = vk.utm_source and s.visit_date = 
+vk.campaign_date
 where
-    s.source in ('yandex', 'vk', 'telegram', 'google', 'organic', 'admitad', 'bing.com')
+    s.source in (
+        'yandex', 'vk', 'telegram', 'google',
+'organic', 'admitad', 'bing.com')
 group by
     s.source;
 -- Конверсия из клика в лид:
