@@ -1,35 +1,37 @@
 -- Количество пользователей, заходивших на сайт:
-select 
-count(distinct visitor_id) as total_visitor,
-date(visit_date) as visit_day
-from sessions s 
+select
+    count(distinct visitor_id) as total_visitor,
+    date(visit_date) as visit_day
+from sessions as s
 group by visit_day
 order by visit_day;
 --Каналы приводящие пользователей на сайт (по дням/неделям/месяца):
-select source,
-count(distinct visitor_id) as total_visitors,
-date(visit_date) as visit_day
-from sessions s 
+select 
+    source,
+    count(distinct visitor_id) as total_visitors,
+    date(visit_date) as visit_day
+from sessions as s 
 group by source, visit_day
 order by visit_day, source;
 --Количество лидов:
-select count(distinct lead_id) as total_leads,
-date(created_at) as lead_day
-from leads l 
+select 
+    count(distinct lead_id) as total_leads,
+    date(created_at) as lead_day
+from leads as l 
 group by lead_day
 order by lead_day;
 --Расходы по разным каналам в динамике:
 select 
-utm_source,
-sum(daily_spent) as total_spent,
-date(campaign_date) as campaign_day
+    utm_source,
+    sum(daily_spent) as total_spent,
+    date(campaign_date) as campaign_day
 from vk_ads va 
 group by utm_source, campaign_day
 union all
 select 
-utm_source,
-sum(daily_spent) as total_spent,
-date(campaign_date) as campaign_day
+    utm_source,
+    sum(daily_spent) as total_spent,
+    date(campaign_date) as campaign_day
 from ya_ads ya 
 group by 
 utm_source, campaign_day
@@ -66,10 +68,10 @@ group by
     s.source;
 -- Из лида в оплату:
 select
-count(distinct lead_id) as leads_count,
-count(distinct CASE WHEN status_id = '142' THEN lead_id END) as paid_count,
-(count(distinct CASE WHEN status_id = '142' THEN lead_id END) * 100.0 / nullif(count(distinct lead_id), 0)) as conversion_rate
-from leads l;
+    count(distinct lead_id) as leads_count,
+    count(distinct CASE WHEN status_id = '142' THEN lead_id END) as paid_count,
+    (count(distinct CASE WHEN status_id = '142' THEN lead_id END) * 100.0 / nullif(count(distinct lead_id), 0)) as conversion_rate
+from leads as l;
 -- Основные метрики:
 with last_paid_click as (
     select
