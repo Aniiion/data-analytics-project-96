@@ -2,100 +2,100 @@
 select
     count(distinct visitor_id) as total_visitor,
     date(visit_date) as visit_day
-from sessions as s
+from sessions
 group by visit_day
 order by visit_day;
 --Каналы приводящие пользователей на сайт (по дням/неделям/месяца):
-select 
+select
     source,
     count(distinct visitor_id) as total_visitors,
     date(visit_date) as visit_day
-from sessions as s 
+from sessions
 group by source, visit_day
 order by visit_day, source;
 --Количество лидов:
-select 
+select
     count(distinct lead_id) as total_leads,
     date(created_at) as lead_day
-from leads as l 
+from leads
 group by lead_day
 order by lead_day;
 --Расходы по разным каналам в динамике:
-select 
+select
     utm_source,
     sum(daily_spent) as total_spent,
     date(campaign_date) as campaign_day
-from vk_ads va 
+from vk_ads
 group by utm_source, campaign_day
 union all
-select 
+select
     utm_source,
     sum(daily_spent) as total_spent,
     date(campaign_date) as campaign_day
-from ya_ads ya 
-group by 
-utm_source, campaign_day
+from ya_ads
+group by
+    utm_source, campaign_day
 order by campaign_day, utm_source;
 -- Окупаемость каналов:
-select 
+select
     s.source,
     coalesce(sum(ya.daily_spent), 0) + coalesce(sum(vk.daily_spent), 0) as total_cost,
     coalesce(sum(l.amount), 0) as revenue,
     (coalesce(sum(l.amount), 0) - (coalesce(sum(ya.daily_spent), 0) + coalesce(sum(vk.daily_spent), 0))) / nullif((coalesce(sum(ya.daily_spent), 0) + coalesce(sum(vk.daily_spent), 0)), 0) * 100 as roi
-from 
-    sessions s
+from
+    sessions
 left join
-    leads l on s.visitor_id = l.visitor_id
+    leads on s.visitor_id = l.visitor_id
 left join
-    ya_ads ya on s.source = ya.utm_source and s.visit_date = ya.campaign_date
+    ya_ads on s.source = ya.utm_source and s.visit_date = ya.campaign_date
 left join
-    vk_ads vk on s.source = vk.utm_source and s.visit_date = vk.campaign_date 
+    vk_ads on s.source = vk.utm_source and s.visit_date = vk.campaign_date
 where
     s.source in ('yandex', 'vk', 'telegram', 'google', 'organic', 'admitad', 'bing.com')
 group by
     s.source;
 -- Конверсия из клика в лид:
-select 
+select
     s.source,
     count(distinct s.visitor_id) as visitors_count,
     count(distinct l.lead_id) as leads_count,
     (count(distinct l.lead_id) * 1.0 / nullif(count(distinct s.visitor_id), 0)) as conversion_click_to_lead
-from 
-    sessions s
-left join 
-    leads l on s.visitor_id = l.visitor_id
+from
+    sessions
+left join
+    leads on s.visitor_id = l.visitor_id
 group by
     s.source;
 -- Из лида в оплату:
 select
     count(distinct lead_id) as leads_count,
-    count(distinct CASE WHEN status_id = '142' THEN lead_id END) as paid_count,
-    (count(distinct CASE WHEN status_id = '142' THEN lead_id END) * 100.0 / nullif(count(distinct lead_id), 0)) as conversion_rate
-from leads as l;
+    count(distinct case when status_id = '142' then lead_id end) as paid_count,
+    (count(distinct case when status_id = '142' then lead_id ena) * 100.0 / nullif(count(distinct lead_id), 0)) as conversion_rate
+from leads;
 -- Основные метрики:
 with last_paid_click as (
     select
         l.visitor_id,
-        visit_date,
-        source as utm_source,
-        medium as utm_medium,
-        campaign as utm_campaign,
-        lead_id,
-        created_at,
-        amount,
-        closing_reason,
-        status_id,
+        s.visit_date,
+        s.source as utm_source,
+        s.medium as utm_medium,
+        s.campaign as utm_campaign,
+        s.lead_id,
+        s.created_at,
+        l.amount,
+        l.closing_reason,
+        l.status_id,
         row_number()
-            over (
-                partition by l.visitor_id
-                order by s.visit_date desc
-            )
-            as rn
+        over (
+            partition by l.visitor_id
+            order by s.visit_date desc
+        )
+        as rn
     from sessions as s
     left join
         leads as l
         on s.visitor_id = l.visitor_id and s.visit_date <= l.created_at
-    where medium in ('cpc', 'cpm', 'cpa', 'youtube', 'cpp', 'tg', 'social')
+    where s.medium in ('cpc', 'cpm', 'cpa', 'youtube', 'cpp', 'tg', 'social')
 ),
 
 f_clicks as (
