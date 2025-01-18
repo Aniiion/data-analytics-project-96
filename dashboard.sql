@@ -95,9 +95,9 @@ select
             then lead_id
     end) as paid_count,
     (count(distinct case
-        when 
+        when
             status_id = '142' then
-                lead_id
+            lead_id
     end) * 100.0 / nullif(count(
         distinct
         lead_id
@@ -149,7 +149,7 @@ metrics as (
     select
         f.utm_source,
         sum(coalesce(ya.daily_spent, 0)
-        + 
+            +
             coalesce(vk.daily_spent, 0)) as total_cost,
         count(distinct f.visitor_id) as
         visitors_count,
